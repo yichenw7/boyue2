@@ -1,0 +1,727 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>多渠道管理中心</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug-->
+    <link href="/stylesheets/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="/javascripts/ie-emulation-modes-warning.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/javascripts/ie10-viewport-bug-workaround.js"></script>
+    <script type="text/javascript" src="javascripts/handlebars-v4.0.5.js"></script>
+    <script type="text/javascript" src="javascripts/app.js"></script>
+    <script src="/javascripts/vue.js"></script>
+    <script src="/javascripts/jQuery.md5.js"></script>
+    <script type="text/javascript" src="/javascripts/plupload/moxie.js"></script>
+    <script type="text/javascript" src="/javascripts/plupload/plupload.dev.js"></script>
+    <script src="/javascripts/qiniu/qiniu.js"></script>
+    <script src="/javascripts/moment.js"></script>
+    <script src="/javascripts/bootstrap-paginator.js"></script>
+    <script type="text/javascript" src="/javascripts/My97DatePicker/WdatePicker.js"></script>
+      <link href="/stylesheets/style.css" rel="stylesheet">
+
+
+  </head>
+  <script type="text/javascript">
+
+
+
+</script>
+  <body>
+    <input type="hidden" id="usertype" value=<%= usertype %>>
+    <input type="hidden" id="fillordersurl" value=<%= fillordersURL %>>
+    <div class="container-fluid container-fluid-padding" >
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav2 nav-pills pull-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= username %> <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#" onclick="logout()">退出</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <h3 class="text-muted"><a href="#" onclick="loadmain('menu','gamelist')" style="text-decoration:none;"><img  src="/images/logo.png"/>&nbsp;&nbsp;|&nbsp;&nbsp; 管理中心</a></h3>
+    </div>
+    <div id="main">
+
+        <div class="row">
+            <div  class="col-xs-3 col-md-2" id="body-left">
+
+          </div>
+
+          <div class="col-xs-12 col-md-10" id="body-right">
+
+           </div>
+        </div>
+    </div>
+
+
+
+      <div>
+        <footer class="footer">
+          <p><span>上海点点乐信息科技有限公司&nbsp;&nbsp; 地址：上海市浦东新区张江高科技术园区春晓路439号4号楼&nbsp; 联系电话：021-38686660</span></p><p><span><br></span></p><p><span>上海点点乐信息科技有限公司版权所有Copyright 2014 ddianle.com Inc.All rights reserved 沪ICP备13007064号-1</span></p>
+        </footer>
+      </div>
+    </div>
+  </body>
+
+<script id="menu-template" type="text/x-handlebars-template">
+    <ul class="nav nav-pills nav-stacked">
+      <li role="presentation" class="active"><a href="#" onClick="loadUrl('gamelist')">游戏列表</a></li>
+      <li role="presentation"><a target="_blank" href="http://test2.ddianle.com:88/api/index.php/%E9%A6%96%E9%A1%B5">帮助文档</a></li>
+  </ul>
+</script>
+
+<script id="gamemenu-template" type="text/x-handlebars-template">
+  <div style="margin-bottom:10px">
+
+     <img  height="120px" width="120px" id="menuicon" src="/images/icon.png">
+     <input type="hidden" id="currentappkey" value=""></input>
+     <input type="hidden" id="currentid" value=""></input>
+     <input type="hidden" id="currentappid" value=""></input>
+     <h3><lable id="appname"></label></h3>
+     <h4>APPID: <lable id="appid"></label></h4>
+   </div>
+    <ul class="nav nav-pills nav-stacked">
+    <li role="presentation" class="active"><a href="#" onClick="loadUrl('paycallbacks')">配置回调地址</a></li>
+    <li role="presentation"><a href="#" onClick="loadUrl('testlogin')">调试登录接口</a></li>
+    <li role="presentation"><a href="#" onClick="loadUrl('testpay')">调试支付回调接口</a></li>
+    <!--
+    <li role="presentation"><a href="#" onClick="loadUrl('paycallbacklist')">渠道回调地址</a></li>
+    <li role="presentation"><a href="#" onClick="loadUrl('packagelist')">渠道包名</a></li> -->
+    <li role="presentation" style= "display:none" id="setadmins"><a href="#" onClick="loadUrl('setadmin')">设置管理员</a></li>
+    <li role="presentation"><a href="#" onClick="loadUrl('ordermgt')">订单管理</a></li>
+  </ul>
+</script>
+  <!-- 游戏列表 -->
+   <script id="gamelist-template" type="text/x-handlebars-template">
+     <div id="container">
+           <form class="form-inline">
+             <div class="form-group col-xs-7">
+                 <a class="btn  btn-primary btn-lg" href="javascript:void(0);" id="addgame" onClick="loadUrl('addgame')" role="button"  style= "display:none"> 创建游戏 &raquo;</a>
+             </div>
+             <div class="form-group">
+               <input type="text" class="form-control input-lg" id="keywords" v-model="keywords" v-on:keyup.enter="submit()"></input>
+             </div>
+             <a class="btn  btn-default  btn-lg" href="#" role="button" v-on:click="submit()">搜索</a>
+           </form>
+           <div v-for="(list,index) in myData">
+             <figure class="highlight">
+               <a href="#" v-on:click="fn(list)">
+               <div class="media">
+                 <div class="media-left">
+                    <img class="media-object" height="150px" width="150px" v-bind:src=list.icon>
+                </div>
+                <div class="media-body">
+                   <input type="hidden" id="id" v-model="list._id"></input>
+                    <h3 class="media-heading"><label id="name">${list.name}</label></h3>
+                    <h4 class="media-heading">APPID:<label id="appid">${ list.appid }</label></h4>
+                    <h4 class="media-heading">AppKey:<label id="appkey">${ list.appkey }</label</h4>
+                </div>
+              </div>
+                </a>
+          </figure>
+        </div>
+
+     </div> <!-- /container -->
+   </script>
+
+
+  <!-- 添加游戏 -->
+<script id="addgame-template" type="text/x-handlebars-template">
+   <div lass="container" id="container">
+       <form class="form-horizontal">
+         <input type="hidden" class="form-control input-lg" id="icon"  >
+         <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-10">
+              <h2>游戏信息</h2>
+            </div>
+         </div>
+         <div class="form-group">
+           <label for="inputGameName" class="col-sm-2 control-label"><h4>游戏名称</h4></label>
+           <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputGameName"   v-model="name">
+           </div>
+         </div>
+         <div class="form-group">
+           <label for="inputGameCode" class="col-sm-2 control-label"><h4>游戏代号</h4></label>
+           <div class="col-sm-6">
+               <input type="text" class="form-control input-lg" id="inputGameCode"  v-model="code" placeholder="游戏的英文字母代号，跟生成的包名有关">
+               </div>
+         </div>
+         <div class="form-group">
+           <label for="inputGameCode" class="col-sm-2 control-label"><h4>游戏描述</h4></label>
+           <div class="col-sm-6">
+               <textarea class="form-control input-lg" rows="8" v-model="describes"></textarea>
+               </div>
+         </div>
+
+
+         <div class="form-group">
+           <label for="inputGameCode" class="col-sm-2 control-label"><h4>上传图标</h4></label>
+           <div class="col-sm-6">
+             <a class="btn btn-default btn-lg" id="pickfiles" href="#" >
+                                <span>选择文件</span>
+                            </a>
+               <p class="help-block" id="tips">尺寸：512x512px，图片格式：PNG</p>
+               <div id="fsUploadProgress"></div>
+               <img class="img-thumbnail" id="uploadimg" height="150px" width="150px"  src="/images/icon_default.png">
+           </div>
+         </div>
+
+        <div class="form-group">
+           <div class="col-sm-offset-2 col-sm-10">
+             <a  href="#" role="button" class="btn btn-primary btn-lg" v-on:click="submit()">提交</a>
+           </div>
+        </div>
+     </form>
+   </div> <!-- /container -->
+ </script>
+
+<!-- 配置回调地址 -->
+<script id="paycallbacks-template" type="text/x-handlebars-template">
+ <div id="container">
+  <p><a class="btn  btn-primary btn-lg" href="#" role="button" v-on:click="displayadd()"> + 添加</a></p>
+    <!--
+     <table class="table table-bordered table_container">
+       <thead>
+         <tr class="active">
+           <th>序号</th>
+           <th>支付通知地址</th>
+           <th>创建时间</th>
+           <th>状态</th>
+           <th>操作</th>
+         </tr>
+       </thead>
+       <tbody v-for="(list,index) in myData">
+         <tr>
+           <td>${index+1}</td>
+           <td>${list.game_server_order_url}</td>
+           <td>${list.createtime | time}</td>
+           <td>
+             <div v-if="list.status===0">
+               正常
+            </div>
+            <div v-else>
+               暂停
+            </div>
+         </td>
+           <td><a href="#" v-on:click="edit(list.id)">编辑</a><label v-if="list.status===0">|<a href="#" v-on:click="disable(list.id)">停用</a></label></td>
+         </tr>
+       </tbody>
+     </table>
+     -->
+
+     <table class="table table-bordered table_container">
+            <thead>
+              <tr class="active">
+                <th>序号</th>
+                <th>支付通知地址</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody v-for="(list,index) in myData">
+              <tr>
+                <td>${index+1}</td>
+                <td>${list.game_server_order_url}</td>
+
+                 <td><a href="#" v-on:click="edit(list._id)">编辑</a></td>
+              </tr>
+            </tbody>
+          </table>
+ </div>
+</script>
+
+<!--登录调试 -->
+<script id="testlogin-template" type="text/x-handlebars-template">
+ <div id="container">
+     <form class="form-horizontal">
+       <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-8">
+            <h3>调试登录接口</h3>
+          </div>
+          <div class="col-sm-3">
+            <label for="inputChannelid" class="control-label"><h4><a target="_blank" href="http://test2.ddianle.com/api/index.php/%E6%9C%8D%E5%8A%A1%E5%99%A8API%E6%96%87%E6%A1%A3">服务器API文档</a></h4></label>
+          </div>
+       </div>
+
+       <div class=" form-group">
+         <div class="col-sm-offset-0">
+           <label for="inputUrl" class="control-label col-sm-1"><h4><strong>API</strong></h4></label>
+           <div class="col-sm-9">
+           <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="sizing-addon1">POST</span>
+            <input type="text" class="form-control input-lg" id="inputUrl" value="http://mulitchannel.ddianle.com/api/v1/token/verify">
+            </div>
+          </div>
+           <span><a class="btn  btn-primary btn-lg" href="#" role="button" v-on:click="submit()">发送</a></span>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label for="inputAppid" class="col-sm-2 control-label"><h4>appid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputAppid" v-model="appid" readonly="true"></input>
+         </div>
+             <label for="inputChannelid" class="control-label"><h4>游戏客户端传入</h4></label>
+       </div>
+
+
+       <div class="form-group">
+         <label for="inputChannelid" class="col-sm-2 control-label"><h4>channelid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputChannelid"
+             onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"  v-model="channelid" v-on:change="md5()"/>
+         </div>
+             <label for="inputChannelid" class="control-label"><h4>游戏客户端传入</h4></label>
+       </div>
+
+
+       <div class="form-group">
+         <label for="inputCuid" class="col-sm-2 control-label"><h4>cuid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputCuid" v-model="cuid" v-on:change="md5()"/>
+             <label ><h4>cuid由第三方渠道提供，长度不固定，需游戏方自行定义</h4></label>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label for="inputToken" class="col-sm-2 control-label"><h4>token</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputToken" v-model="token" v-on:change="md5()"/>
+         </div>
+             <label for="inputChannelid" class="control-label"><h4>有效时间（1H）</h4></label>
+       </div>
+
+
+       <div class="form-group">
+         <label for="inputGameCode" class="col-sm-2 control-label"><h4>sign</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputSign" v-model="sign" readonly="true"/>
+             <p class="help-block">MD5（channelid=xxx&cuid=xxx&token=xxx&appkey=xxx）</p>
+             <p class="help-block"><code>说明：MD5里的所有参数以及值必须都是小写；xxx以具体值为准；</code></p>
+         </div>
+       </div>
+
+      <div class="form-group">
+         <div class="col-sm-offset-0 col-sm-10">
+           <h4><strong>响应数据</strong></h4>
+         </div>
+      </div>
+      <figure class="highlight">
+        <h4><span class="label label-success">STATUS</span>
+        <strong><label id="status"></label></strong>
+        <span class="label label-success">TIME</span>
+        <strong><label id="time"></label></strong></h4>
+        <div>
+          <h4><label id="result">请输入参数后点击发送请求</label></h4>
+        </div>
+
+      </figure>
+   </form>
+ </div>
+ </script>
+
+ <!--测试支付 -->
+ <script id="testpay-template" type="text/x-handlebars-template">
+ <div id="container">
+     <form class="form-horizontal">
+       <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-8">
+            <h3>调试支付回调接口</h3>
+          </div>
+          <div class="col-sm-2">
+            <h4><a target="_blank" href="http://test2.ddianle.com/api/index.php/%E6%9C%8D%E5%8A%A1%E5%99%A8API%E6%96%87%E6%A1%A3#.E4.BA.8C.E3.80.81.E5.85.85.E5.80.BC.E6.8E.A5.E5.8F.A3API">服务器API文档</a></h4>
+          </div>
+       </div>
+
+       <div class=" form-group">
+         <div class="col-sm-offset-0">
+           <label for="inputUrl" class="control-label col-sm-1"><h4><strong>API</strong></h4></label>
+           <div class="col-sm-9">
+           <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="sizing-addon1">POST</span>
+            <input type="text" class="form-control input-lg" id="inputUrl" value="http://pay.multichannel.ddianle.com/api/v1/order">
+            </div>
+          </div>
+           <span><a class="btn  btn-primary btn-lg" href="#" role="button" v-on:click="submit()">发送</a></span>
+         </div>
+       </div>
+
+
+       <div class="form-group">
+         <label for="inputChannelid" class="col-sm-2 control-label"><h4>channelid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputChannelid"
+             onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" v-model="channelid" v-on:change="md5()">
+         </div>
+           <label for="inputChannelid" class="control-label"><h4>渠道id</h4></label>
+       </div>
+
+
+       <div class="form-group">
+         <label for="inputCuid" class="col-sm-2 control-label"><h4>cuid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputCuid" v-model="cuid" v-on:change="md5()">
+         </div>
+             <label for="inputChannelid" class="control-label"><h4>渠道用户id</h4></label>
+       </div>
+
+       <div class="form-group">
+         <label for="inputServerid" class="col-sm-2 control-label"><h4>serverid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputServerid" v-model="serverid" v-on:change="md5()">
+         </div>
+           <label for="inputServerid" class="control-label"><h4>服务器编号</h4></label>
+       </div>
+
+
+       <div class="form-group">
+         <label for="inputAmount" class="col-sm-2 control-label"><h4>amount</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputAmount"
+             onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" v-model="amount" v-on:change="md5()">
+         </div>
+           <label for="inputAmount" class="control-label"><h4>充值金额(分)</h4></label>
+       </div>
+
+
+       <div class="form-group">
+         <label for="inputOrderid" class="col-sm-2 control-label"><h4>orderid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputOrderid" v-model="orderid" v-on:change="md5()">
+         </div>
+           <label for="inputOrderid" class="control-label"><h4>订单号</h4></label>
+       </div>
+
+       <div class="form-group">
+         <label for="inputTransactionid" class="col-sm-2 control-label"><h4>transactionid</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputTransactionid" v-model="transactionid" v-on:change="md5()">
+               <label ><h4>第三方渠道订单号值可为""</h4></label>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label for="inputTranstype" class="col-sm-2 control-label"><h4>transtype</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputTranstype" v-model="transtype" v-on:change="md5()">
+               <label ><h4>交易类型（支付宝、银联、微信等，如果第三方渠道提供） 值可为""</h4></label>
+         </div>
+
+       </div>
+
+       <div class="form-group">
+         <label for="inputExtend" class="col-sm-2 control-label"><h4>extend</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputExtend" v-model="extend" v-on:change="md5()">
+             <label ><h4>游戏通过客户端透传的支付参数 值可为""</h4></label>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label for="inputGameCode" class="col-sm-2 control-label"><h4>sign</h4></label>
+         <div class="col-sm-6">
+             <input type="text" class="form-control input-lg" id="inputSign" v-model="sign" readonly="true">
+             <p class="help-block">MD5（channelid=xxx&cuid=xxx&serverid=xxx&amount=xxx&orderid=xxx</br>&transactionid=xxx&transtype=xxx&extend=xxx&appkey=xxx）</p>
+             <p class="help-block"><code>说明：MD5里的所有参数以及值必须都是小写；xxx以具体值为准；游戏服务器拿到sign需进行验证</code></p>
+         </div>
+       </div>
+
+      <div class="form-group">
+         <div class="col-sm-offset-0 col-sm-10">
+           <h4><strong>响应数据</strong></h4>
+         </div>
+      </div>
+
+
+      <figure class="highlight">
+        <h4><span class="label label-success">STATUS</span>
+        <strong><label id="status"></label></strong>
+        <span class="label label-success">TIME</span>
+        <strong><label id="time"></label></strong></h4>
+        <div>
+          <h4><label id="result">请输入参数后点击发送请求</label></h4>
+        </div>
+
+      </figure>
+   </form>
+ </div>
+ </script>
+
+ <!--渠道回调地址 -->
+ <script id="paycallbacklist-template" type="text/x-handlebars-template">
+ <div style="margin-left:20px;margin-right:50px" id="container">
+   <form>
+   <div class="form-group">
+    <label for="inputUrl" class="control-label col-sm-2 " style="text-align:right"><h4>渠道名称</h4></label>
+       <div class="col-sm-offset-0">
+       <div class="col-sm-6">
+       <input type="text" class="form-control input-lg" id="keywords" v-model="keywords" v-on:keyup.enter="submit()">
+      </div>
+       <span><a class="btn  btn-default btn-lg" href="#" role="button" v-on:click="submit()">搜索</a></span>
+     </div>
+   </div>
+  </form>
+  <p class="help-block">注：请将支付通知地址复制到第三方渠道平台，支付通知地址为动态生成</p>
+     <table class="table table-bordered table_container">
+       <thead>
+         <tr class="active">
+           <th>支付渠道</th>
+           <th>支付通知地址</th>
+           <th>配置位置</th>
+         </tr>
+       </thead>
+       <tbody v-for="(list,index) in myData">
+         <tr>
+           <td>${list.cname}</td>
+           <td>${list.pay_notice_url}</td>
+           <td>
+             <div v-if="list.locations===0">
+               客户端
+            </div>
+            <div v-else>
+               服务端
+            </div>
+         </td>
+         </tr>
+       </tbody>
+     </table>
+
+ </div> <!-- /container -->
+ </script>
+
+ <!--渠道回调地址 -->
+ <script id="packagelist-template" type="text/x-handlebars-template">
+ <div style="margin-left:20px;margin-right:50px" id="container">
+   <form>
+   <div class="form-group">
+    <label for="inputUrl" class="control-label col-sm-2 " style="text-align:right"><h4>渠道名称</h4></label>
+       <div class="col-sm-offset-0">
+       <div class="col-sm-6">
+       <input type="text" class="form-control input-lg" id="inputUrl" v-model="keywords" v-on:keyup.enter="submit()">
+      </div>
+       <span><a class="btn  btn-default btn-lg" href="#" role="button" v-on:click="submit()" >搜索</a></span>
+     </div>
+   </div>
+
+</form>
+
+     <table class="table table-bordered table_container">
+       <thead>
+         <tr class="active">
+           <th>渠道名称</th>
+           <th>渠道包名</th>
+         </tr>
+       </thead>
+       <tbody v-for="(list,index) in myData">
+         <tr>
+           <td>${list.cname}</td>
+           <td>${list.package_name}</td>
+         </tr>
+       </tbody>
+     </table>
+
+ </div> <!-- /container -->
+ </script>
+
+ <!--添加配置回调地址-->
+ <script id="addpaycallback-template" type="text/x-handlebars-template">
+ <div id="container">
+     <form class="form-horizontal">
+       <input type="hidden" id="id" value={{ id }}>
+       <div class="form-group">
+         <label for="inputGameName" class="col-sm-2 control-label"><h4>支付通知地址</h4></label>
+         <div class="col-sm-7">
+           <input type="text" class="form-control input-lg" id="inputurl" placeholder="支付通知回调地址，请务必填写正确" v-model="url">
+         </div>
+       </div>
+       <!--
+       <div class="form-group">
+         <label for="inputGameCode" class="col-sm-2 control-label"><h4>状态</h4></label>
+         <div class="col-sm-7">
+             <label class="radio-inline">
+               <input type="radio"   value="0"  v-model="picked">启用
+             </label>
+             <label class="radio-inline">
+               <input type="radio"   value="1" v-model="picked">禁用
+             </label>
+           </div>
+       </div>
+       -->
+      <div class="form-group">
+         <div class="col-sm-offset-2 col-sm-10">
+           <a href="#" role="button" class="btn btn-primary btn-lg" v-on:click="submit()">提交</a>
+         </div>
+      </div>
+   </form>
+ </div>
+ </script>
+
+ <!--设置游戏管理员-->
+ <script id="setadmin-template" type="text/x-handlebars-template">
+   <div  id="container">
+     <form>
+     <div class="form-group">
+      <label for="inputUrl" class="control-label col-sm-2 " style="text-align:right"><h4>用户名称</h4></label>
+         <div class="col-sm-offset-0">
+         <div class="col-sm-6">
+         <input type="text" class="form-control input-lg" id="inputUrl" v-model="keywords" v-on:keyup.enter="submit()">
+        </div>
+         <span><a class="btn  btn-default btn-lg" href="#" role="button" v-on:click="submit()" >搜索</a></span>
+       </div>
+     </div>
+
+  </form>
+
+     <table class="table table-bordered table_container">
+       <colgroup>
+         <col class="col-xs-7">
+         <col class="col-xs-1">
+         <col class="col-xs-2">
+       </colgroup>
+         <thead>
+           <tr class="active">
+             <th>用户名称</th>
+             <th>类型</th>
+             <th>操作</th>
+           </tr>
+         </thead>
+         <tbody v-for="(list,index) in myData">
+           <tr>
+             <td>${list.uname}</td>
+             <td>
+               <div v-if="list.status===1">
+                 管理员
+              </div>
+              <div v-else>
+                 普通用户
+              </div></td>
+              <td>
+                <div v-if="list.status===1">
+                  <a href="#" v-on:click="cancel(index,list)">取消</a>
+               </div>
+               <div v-else>
+                  <a href="#" v-on:click="set(index,list)">设置</a>
+               </div>
+             </td>
+           </tr>
+         </tbody>
+       </table>
+       <ul id="pagination"></ul>
+   </div>
+  </script>
+
+ <script id="ordermgt-template" type="text/x-handlebars-template">
+  <div id="container">
+      <form class="form-inline">
+        <div class="form-group">
+          <p>
+            <input type="text" class="form-control" id="orderid" v-model="gameorderid" placeholder="订单号">
+            <input type="text" class="form-control" id="channelorderid"v-model="channelorderid"  placeholder="渠道订单号">
+            <input type="text" class="form-control" id="startdate"  placeholder="订单创建开始时间" onClick="WdatePicker({startdate:new Date(),dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+            <input type="text" class="form-control" id="enddate"  placeholder="订单创建结束时间" onClick="WdatePicker({enddate:new Date(),dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+
+           <select v-model="selected" class="form-control">
+             <option v-for="item in items" v-bind:value="item.value">${item.text}</option>
+           </select>
+            <input type="text" class="form-control" id="serverid" v-model="serverid" placeholder="服务器ID">
+            <input type="text" class="form-control" id="channel_id" v-model="channel_id" placeholder="渠道号">
+          </p>
+          <p>
+            <input type="text" class="form-control" id="playerid" v-model="playerid" placeholder="角色ID">
+            <input type="text" class="form-control" id="playname" v-model="playername" placeholder="角色名称">
+            <input type="text" class="form-control" id="minamount" v-model="minamount" placeholder="最小金额(分)">
+            <input type="text" class="form-control" id="maxamount" v-model="maxamount" placeholder="最大金额(分)">
+            <input type="text" class="form-control" id="commodityid" v-model="commodityid" placeholder="商品ID">
+            <input type="text" class="form-control" id="commodityidname" v-model="commodityidname" placeholder="商品名称">
+
+            <a  class="btn btn-primary" href="#" role="button" v-on:click="submit()">&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;</a>
+            <a class="btn btn-default" href="#" role="button" v-on:click="clear()">&nbsp;&nbsp;&nbsp;清空&nbsp;&nbsp;&nbsp;</a>
+          </p>
+        </div>
+      </form>
+
+      <table class="table table-bordered table_container" style="table-layout:fixed">
+        <colgroup>
+         	<col style="width:2%">
+          <col style="width:15%">
+          <col style="width:18%">
+          <col style="width:6%">
+          <col style="width:12%">
+          <col style="width:5%">
+         	<col style="width:6%">
+         	<col style="width:7%">
+         	<col style="width:6%">
+         	<col style="width:12%">
+         	<col style="width:4%">
+         	</colgroup>
+        <thead>
+          <tr class="active">
+            <th></th>
+            <th>订单号</th>
+            <th>渠道订单号</th>
+            <th>订单状态</th>
+            <th>角色ID/名称</th>
+            <th>金额(分)</th>
+            <th>服务器ID</th>
+            <th>商品ID/名称</th>
+            <th>渠道号</th>
+            <th>下单时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody v-for="(list,index) in myData">
+          <tr>
+            <td>${index+1}</td>
+            <td style="word-wrap:break-word;">${list.gameorderid}</td>
+            <td style="word-wrap:break-word;">${list.channelorderid}</td>
+            <td>
+              <div v-if="list.status=== '0'">
+                订单创建中
+             </div>
+             <div v-if="list.status=== '1'">
+               支付成功
+            </div>
+            <div v-if="list.status=== '2'">
+              支付完成
+           </div>
+           <div v-if="list.status=== '3'">
+             支付失败
+          </div>
+          </td>
+          <td>${list.playerid}/${list.playername}</td>
+          <td>${list.amount}</td>
+          <td>${list.serverid}</td>
+          <td>${list.commodityid}/${list.commodityidname}</td>
+          <td>${list.channel_id}</td>
+          <td>${list.create_at | time}</td>
+          <td>
+            <div v-if="list.status==='3'||list.status==='1'">
+              <a href="#" v-on:click="orders(index,list)">补单</a>
+           </div>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+       <ul id="pagination"></ul>
+  </div>
+  </script>
+</html>

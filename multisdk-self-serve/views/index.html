@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>多渠道管理中心</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug-->
+    <link href="/stylesheets/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/style.css" rel="stylesheet">
+
+    <script src="/javascripts/ie-emulation-modes-warning.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/javascripts/ie10-viewport-bug-workaround.js"></script>
+    <link rel="stylesheet" href="/stylesheets/swiper-3.4.2.min.css">
+    <script src="/javascripts/swiper-3.4.2.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="/login">登录</a></li>
+           <li role="presentation"><a href=<%= registcallbackURL %>>注册</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted"><img  src="/images/logo.png"/>&nbsp;&nbsp;|&nbsp;&nbsp; 管理中心</h3>
+      </div>
+
+
+      <div class="swiper-container">
+          <div class="swiper-wrapper">
+              <div class="swiper-slide">  <img class="index_img"  src="/images/index.jpg"/></div>
+              <div class="swiper-slide">  <img class="index_img"  src="/images/logo.png"/></div>
+          </div>
+
+          <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+      </div>
+      <footer class="footer">
+        <p><span>上海点点乐信息科技有限公司&nbsp;&nbsp; 地址：上海市浦东新区张江高科技术园区春晓路439号4号楼&nbsp; 联系电话：021-38686660</span></p><p><span><br></span></p><p><span>上海点点乐信息科技有限公司版权所有Copyright 2014 ddianle.com Inc.All rights reserved 沪ICP备13007064号-1</span></p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var mySwiper = new Swiper ('.swiper-container', {
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            speed: 2000,
+            loop: true,
+            observer:true,
+            observeParents:true,
+            autoplayDisableOnInteraction : false,
+            autoplay:2500
+      })
+    })
+</script>
+</html>

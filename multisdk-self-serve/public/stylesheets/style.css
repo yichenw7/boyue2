@@ -1,0 +1,151 @@
+/* Space out content a bit */
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  overflow-x : hidden;
+}
+
+a:link{text-decoration:none;   /* 指正常的未被访问过的链接*/
+}a:visited{text-decoration:none; /*指已经访问过的链接*/
+}a:hover{text-decoration:none;/*指鼠标在链接*/}a:active{text-decoration:none;/* 指正在点的链接*/
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+/* Custom page header */
+.header {
+  padding-bottom: 0px;
+  border-bottom: 1px solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 20px;
+}
+
+/* Custom page footer */
+.footer {
+  position：fixed;
+  padding-top: 20px;
+  color: #777;
+  bottom: 0;
+  border-top: 1px solid #e5e5e5;
+  text-align:center;
+  line-height:10px;
+}
+
+.container{
+  width:1350;
+}
+
+.container-fluid-padding{
+  padding-left:120px;
+  padding-right:120px;
+}
+h3 {
+				font-size: 2.0rem; /*2.4em × 10 = 24px */
+	 }
+
+   h4 {
+   				font-size: 1.8rem; /*2.4em × 10 = 24px */
+   	 }
+
+/* Customize container */
+@media (min-width: 768px) {
+  .container {
+    max-width: 2022px;
+  }
+}
+.container-narrow > hr {
+  margin: 10px 0;
+}
+
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 10px;
+  }
+}
+
+.index_img{
+  width:100%;height:100%;
+}
+
+
+.highlight{
+  padding:25px;
+  margin-top: 30px;
+  margin-left:20px;
+  margin-bottom:14px;
+  margin-right: 100px;
+  background-color:#f7f7f9;
+  border:1px solid #e1e1e8;
+  border-radius:4px
+}
+
+.highlight  > a {
+   text-decoration:none;
+}
+
+
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table_container{
+  font-size: 15px;
+}
+
+.swiper-container {
+  width: 100%;
+    height: 700px;
+}
+
+.swiper-slide {
+       text-align: center;
+       font-size: 18px;
+       background: #fff;
+
+       /* Center slide text vertically */
+       display: -webkit-box;
+       display: -ms-flexbox;
+       display: -webkit-flex;
+       display: flex;
+       -webkit-box-pack: center;
+       -ms-flex-pack: center;
+       -webkit-justify-content: center;
+       justify-content: center;
+       -webkit-box-align: center;
+       -ms-flex-align: center;
+       -webkit-align-items: center;
+       align-items: center;
+   }
+
+   .nav2 ul{
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+   }
+
+   .nav2 > li {
+ position: relative;
+ display: block;
+}
